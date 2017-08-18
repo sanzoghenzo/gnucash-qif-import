@@ -7,8 +7,10 @@ load a QIF file into a sequence of those classes.
 
 It's enough to be useful for writing conversions.
 
-Original source from http://code.activestate.com/recipes/306103-quicken-qif-file-class-and-conversion/
+Original source from
+http://code.activestate.com/recipes/306103-quicken-qif-file-class-and-conversion/
 """
+from __future__ import print_function
 
 import sys
 import datetime
@@ -63,54 +65,53 @@ def parse_qif(infile):
 
     account = None
     items = []
-    curItem = QifItem()
+    cur_item = QifItem()
     for line in infile:
         firstchar = line[0]
         data = line[1:].strip()
         if firstchar == '\n':  # blank line
             pass
-        elif firstchar == '^':
-                               # end of item
-            if curItem.type != 'Account':
+        elif firstchar == '^':  # end of item
+            if cur_item.type != 'Account':
                 # save the item
-                items.append(curItem)
-            curItem = QifItem()
-            curItem.account = account
+                items.append(cur_item)
+            cur_item = QifItem()
+            cur_item.account = account
         elif firstchar == 'D':
             year, month, day = map(int, data.split('/'))
-            curItem.date = datetime.datetime(year=year, month=month, day=day)
+            cur_item.date = datetime.datetime(year=year, month=month, day=day)
         elif firstchar == 'T':
-            curItem.amount = data
+            cur_item.amount = data
         elif firstchar == 'C':
-            curItem.cleared = data
+            cur_item.cleared = data
         elif firstchar == 'P':
-            curItem.payee = data
+            cur_item.payee = data
         elif firstchar == 'M':
-            curItem.memo = data
+            cur_item.memo = data
         elif firstchar == 'A':
-            curItem.address = data
+            cur_item.address = data
         elif firstchar == 'L':
-            curItem.category = data
+            cur_item.category = data
         elif firstchar == 'S':
-            curItem.split_category = data
+            cur_item.split_category = data
         elif firstchar == 'E':
-            curItem.split_memo = data
+            cur_item.split_memo = data
         elif firstchar == '$':
-            curItem.split_amount = data
+            cur_item.split_amount = data
         elif firstchar == 'N':
-            if curItem.type == 'Account':
+            if cur_item.type == 'Account':
                 account = data
         elif firstchar == '!':
-            curItem.type = data
+            cur_item.type = data
         else:
             # don't recognise this line; ignore it
-            print >> sys.stderr, 'Skipping unknown line:\n', line
+            print('Skipping unknown line:\n', line, file=sys.stderr)
 
     return items
 
 
 if __name__ == '__main__':
     # read from stdin and write CSV to stdout
-    items = parse_qif(sys.stdin)
-    for item in items:
-        print item
+    elems = parse_qif(sys.stdin)
+    for item in elems:
+        print(item)
