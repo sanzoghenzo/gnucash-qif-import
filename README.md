@@ -24,11 +24,11 @@ Getting Started
 
 For sqlite GnuCash files: 
 
-    piecash_qif_import -v -f examples/accounts.gnucash examples/expenses.qif
+    qif2gnucash -v -f examples/accounts.gnucash examples/expenses.qif
 
 For GnuCash books stored in MySQL or PostgreSQL: 
 
-    piecash_qif_import -v -f mysql://$USERNAME:$PASSWORD@$HOSTNAME/accounts examples/expenses.qif
+    qif2gnucash -v -f mysql://$USERNAME:$PASSWORD@$HOSTNAME/accounts examples/expenses.qif
 
 The above command should log two "Adding transaction for account.." lines and will add the expenses from examples/expenses.qif to the accounts.gnucash file.
 Open accounts.gnucash (or the equivalent database in case of MySQL) with GnuCash before and after executing the above command line to see the difference.
@@ -46,7 +46,7 @@ You need the "mtp-tools" command line programs to use this feature:
 
 To import all files ending with ".qif" from your MTP device (connected via USB) into your "my-accounts" GnuCash file:
 
-    piecash_qif_import -v -f ~/my-accounts.gnucash mtp:.*.qif
+    qif2gnucash -v -f ~/my-accounts.gnucash mtp:.*.qif
 
 You can use the `--dry-run` option to do a safe trial run.
 In order to be able to safely repeat the above command without getting a bunch of duplicate transactions (and to speed up the stupidly slow MTP access),
